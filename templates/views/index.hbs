@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Google search terms stats</title>
+	<link rel="icon" href="/imgs/weather.png">
+	<link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+	<div class="main-content">
+		{{> header}}
+		<p>Use this site to search for the statistics for keywords!</p>
+		<form class="keywords-input">
+			<input placeholder="Keyword 1" name="keyword1"><span class="bar-result hidden">Text</span><br>
+			<input placeholder="Keyword 2" name="keyword2"><span class="bar-result hidden">Text</span><br>
+			<input placeholder="Keyword 3" name="keyword3"><span class="bar-result hidden">Text</span><br>
+			<input placeholder="Keyword 4" name="keyword4"><span class="bar-result hidden">Text</span><br>
+			<input placeholder="Keyword 5" name="keyword5"><span class="bar-result hidden">Text</span><br>
+			<input placeholder="Keyword 6" name="keyword6"><span class="bar-result hidden">Text</span><br>
+			<input placeholder="Keyword 7" name="keyword7"><span class="bar-result hidden">Text</span><br>
+			<input placeholder="Keyword 8" name="keyword8"><span class="bar-result hidden">Text</span><br>
+			<input placeholder="Keyword 9" name="keyword9"><span class="bar-result hidden">Text</span><br>
+			<input placeholder="Keyword 10" name="keyword10"><span class="bar-result hidden">Text</span><br>
+			<button>Search</button>
+		</form>
+		<p id="msg-1"></p>
+		<p id="msg-2"></p>
+	</div>
+
+	{{> footer }}
+
+	<script src="/js/app.js"></script>
+</body>
+
+</html>
