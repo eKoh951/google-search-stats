@@ -10,6 +10,7 @@ msgTwo.textContent = ''
 
 // The argument 'e' stands for event
 keywordsForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
     const $keyWordsForm = $(this);
     let keyWordsArray = $keyWordsForm.serializeArray();
     //Filter only valid data
@@ -18,7 +19,7 @@ keywordsForm.addEventListener('submit', async function(e) {
     keyWordsArray = keyWordsArray.map( keyWord => keyWord.value );
     console.log({keyWordsArray});
     
-    e.preventDefault();
+    if( keyWordsArray.length === 0 ) return;
     
     msgOne.textContent = 'Loading data...';
     msgTwo.textContent = '';
