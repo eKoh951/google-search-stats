@@ -22,16 +22,13 @@ let user;
 
 app.use(express.json()); //Middleware (app.use) to parse JSON to req.body
 
-//app.use((req, res, next) => { //Middleware to use adwords User
-//	user = adwordsUser()
-//	console.log(user)
-//	next()
-//})
+app.use((req, res, next) => { //Middleware to use adwords User
+	user = adwordsUser()
+	//console.log(user)
+	next()
+})
 
 app.get('/', async (req, res) => {
-	//const keywords = ['ice', 'drop']
-	//const result = await targetingIdea( user, keywords )
-	//console.log(result)
 	res.render('index', {
 		title: 'Search for google keywords statistics',
 		name: 'Erick Ponce'
@@ -42,23 +39,48 @@ app.post('/search', async (req, res) => {
 	console.log('from test endpoint')
 	const keywords = req.body.keywords
 	console.log(keywords)
-	let lastMonth = new Date();
-	lastMonth.setDate(1);
-	lastMonth.setMonth(lastMonth.getMonth()-1)
-	googleTrends.interestOverTime({
-		keyword: keywords,
-		startTime: lastMonth,
-		geo: 'MX'
+
+	if( !keywords ) res.status(400).send('No keywords were defined')
+
+	let targetingIdeaService = user.getService('TargetingIdeaService', 'v201809')
+	
+	let selector = {
+		searchParameters: [
+			{
+				'xsi:type': 'RelatedToQuerySearchParameter',
+				queries: keywords
+				//queries: ['man', 'woman']
+			}
+		],
+		ideaType: 'KEYWORD',
+		requestType: 'STATS',
+		requestedAttributeTypes: [
+			'TARGETED_MONTHLY_SEARCHES',
+			'SEARCH_VOLUME'
+		],
+		paging: {
+			startIndex: 0,
+			numberResults: 10
+		},
+		localeCode: "es_MX",
+		currencyCode: "MXN"
+	}
+	
+	targetingIdeaService.get({selector: selector}, (error, result) => {
+		console.log({ entries: result.entries })
+		let searchesResult = []
+		let average = (array) => array.reduce((a, b) => a + b) / array.length;
+		for( const entry of result.entries ) {
+			//console.log(entry.data)
+			let monthlySearches = entry.data.filter( attribute => attribute.key === 'TARGETED_MONTHLY_SEARCHES' )
+			monthlySearches = monthlySearches[0].value.value
+			monthlySearches = monthlySearches.map( result => parseInt( result.count ));
+			monthlySearches = parseInt( average(monthlySearches) )
+			searchesResult.push( monthlySearches )
+			console.log(monthlySearches)
+		}
+		res.status( result.statusCode || 200 ).send({ searchesResult });
 	})
-	.then(function(results){
-		let averages = JSON.parse( results ).default.averages;
-		console.log('These results are awesome', averages);
-		res.set('Content-Type', 'application/json');
-		res.status(201).send({ averages });
-	})
-	.catch(function(err){
-		console.error('Oh no there was an error', err);
-	});	
 })
 
 app.listen(port, () => {

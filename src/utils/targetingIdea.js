@@ -1,4 +1,4 @@
-const targetingIdea = ( user, keywords ) => {
+const targetingIdea = async ( user, keywords ) => {
 	let targetingIdeaService = user.getService('TargetingIdeaService', 'v201809')
 	
 	let selector = {
@@ -23,12 +23,7 @@ const targetingIdea = ( user, keywords ) => {
 		]
 	}
 	
-	const result = targetingIdeaService.get({selector}, (error, result) => {
-		console.log(error);
-		//res.status(result.statusCode).send(error)
-		return result
-	})
-
+	const result = await targetingIdeaService.get({selector})
 	return result
 
 };

@@ -31,17 +31,17 @@ keywordsForm.addEventListener('submit', async function(e) {
         'Content-Type': 'application/json'
         },
         body: JSON.stringify({ keywords: keyWordsArray })
-      });
+    });
     let content = await rawResponse.json();
-    let averages = content.averages;
-    let resultAmount = averages.length;
+    let results = content.searchesResult;
+    let resultAmount = results.length;
     
     $('.bar-result').each( function( index ) {
         const $bar = $(this);
         $bar.hide();
         console.log('from bar each', $bar)
         if ( ( index ) < resultAmount ) {
-            $bar.removeClass('hidden').text(averages[index]).show();
+            $bar.removeClass('hidden').text(results[index]).show();
         }
     });
 })
