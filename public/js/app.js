@@ -36,12 +36,23 @@ keywordsForm.addEventListener('submit', async function(e) {
     let results = content.searchesResult;
     let resultAmount = results.length;
     
+    //Sort the data
+    inputs = [];
+    $('input').each( function(index) { 
+        const value = this.value;
+        if ( value !== "" ) inputs.push( value )
+    });
+    inputs.sort()
+    $('input').each( function(index) { 
+        if ( this.value !== "" ) this.value = inputs[index];
+    });
+
     $('.bar-result').each( function( index ) {
         const $bar = $(this);
         $bar.hide();
         console.log('from bar each', $bar)
         if ( ( index ) < resultAmount ) {
-            $bar.removeClass('hidden').text(results[index]).show();
+            $bar.removeClass('hidden').text(results[index].value).show();
         }
     });
 })

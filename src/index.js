@@ -55,6 +55,7 @@ app.post('/search', async (req, res) => {
 		ideaType: 'KEYWORD',
 		requestType: 'STATS',
 		requestedAttributeTypes: [
+			'KEYWORD_TEXT',
 			'TARGETED_MONTHLY_SEARCHES',
 			'SEARCH_VOLUME'
 		],
@@ -67,17 +68,21 @@ app.post('/search', async (req, res) => {
 	}
 	
 	targetingIdeaService.get({selector: selector}, (error, result) => {
-		console.log({ entries: result.entries })
+		//console.log({ entries: result.entries[0].data[0].value.value })
+		//console.log({ entries: result.entries[0].data[0].value.value })
+		//res.status(200).send(result)
 		let searchesResult = []
-		let average = (array) => array.reduce((a, b) => a + b) / array.length;
+		//let average = (array) => array.reduce((a, b) => a + b) / array.length;
 		for( const entry of result.entries ) {
-			//console.log(entry.data)
-			let monthlySearches = entry.data.filter( attribute => attribute.key === 'TARGETED_MONTHLY_SEARCHES' )
-			monthlySearches = monthlySearches[0].value.value
-			monthlySearches = monthlySearches.map( result => parseInt( result.count ));
-			monthlySearches = parseInt( average(monthlySearches) )
-			searchesResult.push( monthlySearches )
-			console.log(monthlySearches)
+			let monthlySearchesKeyword = entry.data.filter( attribute => attribute.key === 'KEYWORD_TEXT' )[0].value.value
+			let monthlySearchesValue = entry.data.filter( attribute => attribute.key === 'SEARCH_VOLUME' )[0].value.value
+			searchesResult.push({
+				keyword: monthlySearchesKeyword,
+				value: monthlySearchesValue
+			})
+			searchesResult.sort((a, b) => a.keyword.localeCompare(b.keyword));
+			console.log(searchesResult)
+
 		}
 		res.status( result.statusCode || 200 ).send({ searchesResult });
 	})
