@@ -23,8 +23,14 @@ const targetingIdea = async ( user, keywords ) => {
 		]
 	}
 	
-	const result = await targetingIdeaService.get({selector})
-	return result
+	const result = await targetingIdeaService.get({selector}, (error, res) => {
+		//console.log(error);
+		//console.log(result);
+		//res.status(res.statusCode).send(res)
+		
+		return res
+		//console.log(finalResult)
+	})
 
 };
 
